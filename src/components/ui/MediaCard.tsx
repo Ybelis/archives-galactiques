@@ -1,95 +1,67 @@
+import { Link } from 'react-router-dom'
 import type { Work } from '../../types'
 import { ImportanceBadge, TypeBadge } from './Badge'
+import { getWorkAssets } from '../../data/mediaRegistry'
 
 interface Props {
   work: Work
   compact?: boolean
 }
 
+function cardDetailPath(work: Work): string {
+  if (work.type === 'film') return `/films/${work.id}`
+  if (work.type === 'jeu') return `/games/${work.id}`
+  return `/series/${work.id}`
+}
+
 export default function MediaCard({ work, compact = false }: Props) {
+  const to = cardDetailPath(work)
+  const assets = getWorkAssets(work.id)
+  const imgSrc = assets.poster ?? assets.thumbnail ?? work.thumbnail
+
   return (
-    <article
-      className="card-glow"
-      style={{
-        background: 'var(--color-surface)',
-        border: '1px solid var(--color-border)',
-        borderRadius: '8px',
-        overflow: 'hidden',
-        display: 'flex',
-        flexDirection: 'column',
-        cursor: 'default',
-      }}
-    >
-      {/* Thumbnail */}
-      <div style={{ position: 'relative', aspectRatio: compact ? '16/9' : '2/3', overflow: 'hidden', background: 'var(--color-surface-elevated)' }}>
-        <img
-          src={work.thumbnail}
-          alt={work.title}
-          loading="lazy"
-          style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
-          onError={(e) => {
-            (e.target as HTMLImageElement).style.display = 'none'
-          }}
-        />
-        <div style={{
-          position: 'absolute',
-          inset: 0,
-          background: 'linear-gradient(to top, rgba(7,11,19,0.9) 0%, transparent 50%)',
-        }} />
-        <div style={{ position: 'absolute', top: '8px', left: '8px', display: 'flex', gap: '4px', flexWrap: 'wrap' }}>
-          <TypeBadge value={work.type} />
-        </div>
-        <div style={{ position: 'absolute', bottom: '8px', left: '8px' }}>
-          <ImportanceBadge value={work.importance} />
-        </div>
-      </div>
-
-      {/* Content */}
-      <div style={{ padding: compact ? '0.75rem' : '1rem', display: 'flex', flexDirection: 'column', gap: '0.5rem', flex: 1 }}>
-        <div>
-          <h3 style={{
-            fontFamily: 'var(--font-heading)',
-            fontSize: compact ? '1rem' : '1.1rem',
-            fontWeight: 600,
-            color: 'var(--color-text)',
-            margin: 0,
-            lineHeight: 1.3,
-          }}>
-            {work.title}
-          </h3>
-          <p style={{ fontSize: '0.75rem', color: 'var(--color-muted)', margin: '2px 0 0', fontFamily: 'var(--font-body)' }}>
-            {work.period} · {work.releaseYear}
-            {work.duration && ` · ${work.duration} min`}
-            {work.seasons && ` · ${work.seasons} saison${work.seasons > 1 ? 's' : ''}`}
-          </p>
+    <Link to={to} style={{ textDecoration: 'none', display: 'block' }}>
+      <article className="card-glow ag-card" style={{ overflow: 'hidden', display: 'flex', flexDirection: 'column', cursor: 'pointer', height: '100%' }}>
+        <div className={compact ? 'media-card-img-wrap media-card-img-wrap--wide' : 'media-card-img-wrap'}>
+          <img
+            src={imgSrc}
+            alt={work.title}
+            loading="lazy"
+            style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+            onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }}
+          />
+          <div className="media-card-img-overlay" />
+          <div className="media-card-badges-top">
+            <TypeBadge value={work.type} />
+          </div>
+          <div className="media-card-badge-bottom">
+            <ImportanceBadge value={work.importance} />
+          </div>
         </div>
 
-        {!compact && (
-          <p style={{ fontSize: '0.82rem', color: 'var(--color-muted)', margin: 0, lineHeight: 1.55 }} className="line-clamp-3">
-            {work.synopsis}
-          </p>
-        )}
-
-        {!compact && work.personalNote && (
-          <blockquote style={{
-            margin: 0,
-            padding: '0.5rem 0.75rem',
-            borderLeft: '2px solid rgba(79, 195, 247, 0.4)',
-            background: 'rgba(79, 195, 247, 0.04)',
-            borderRadius: '0 4px 4px 0',
-          }}>
-            <p style={{ fontSize: '0.78rem', color: 'var(--color-muted)', margin: 0, fontStyle: 'italic', lineHeight: 1.5 }} className="line-clamp-2">
-              {work.personalNote}
+        <div className={compact ? 'media-card-body media-card-body--compact' : 'media-card-body'}>
+          <div>
+            <h3 className={compact ? 'media-card-title media-card-title--compact' : 'media-card-title'}>
+              {work.title}
+            </h3>
+            <p className="ag-meta media-card-meta">
+              {work.period} · {work.releaseYear}
+              {work.duration ? ` · ${work.duration} min` : ''}
+              {work.seasons ? ` · ${work.seasons} saison${work.seasons > 1 ? 's' : ''}` : ''}
             </p>
-          </blockquote>
-        )}
+          </div>
 
-        {!compact && work.prerequisites.length > 0 && (
-          <p style={{ fontSize: '0.72rem', color: 'rgba(139,155,180,0.6)', margin: 0 }}>
-            Prérequis : {work.prerequisites.join(', ')}
-          </p>
-        )}
-      </div>
-    </article>
+          {!compact && (
+            <p className="media-card-synopsis line-clamp-3">{work.synopsis}</p>
+          )}
+
+          {!compact && work.personalNote && (
+            <blockquote className="media-card-note">
+              <p className="line-clamp-2">{work.personalNote}</p>
+            </blockquote>
+          )}
+        </div>
+      </article>
+    </Link>
   )
 }

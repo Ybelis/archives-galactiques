@@ -3,17 +3,13 @@ import { useSearchParams } from 'react-router-dom'
 import { films, series, eras } from '../data'
 import type { EraId, Importance, WorkType } from '../types'
 import MediaCard from '../components/ui/MediaCard'
+import FilterBtn from '../components/ui/FilterBtn'
 
 const allWorks = [...films, ...series].sort((a, b) => {
   const eraOrder: Record<EraId, number> = {
-    'dawn-of-the-jedi': 0,
-    'old-republic': 1,
-    'high-republic': 2,
-    'fall-of-the-jedi': 3,
-    'reign-of-the-empire': 4,
-    'age-of-rebellion': 5,
-    'new-republic': 6,
-    'rise-of-the-first-order': 7,
+    'dawn-of-the-jedi': 0, 'old-republic': 1, 'high-republic': 2,
+    'fall-of-the-jedi': 3, 'reign-of-the-empire': 4, 'age-of-rebellion': 5,
+    'new-republic': 6, 'rise-of-the-first-order': 7, 'new-jedi-order': 8,
   }
   return eraOrder[a.era] - eraOrder[b.era]
 })
@@ -33,36 +29,18 @@ const typeOptions: { value: WorkType | 'all'; label: string }[] = [
   { value: 'serie-animee', label: 'Séries animées' },
 ]
 
-function FilterBtn({ active, onClick, children }: { active: boolean; onClick: () => void; children: React.ReactNode }) {
-  return (
-    <button
-      onClick={onClick}
-      style={{
-        padding: '0.35rem 0.9rem',
-        borderRadius: '4px',
-        border: active ? '1px solid rgba(79,195,247,0.4)' : '1px solid rgba(148,197,255,0.15)',
-        background: active ? 'rgba(79,195,247,0.1)' : 'transparent',
-        color: active ? 'var(--color-accent-blue)' : 'var(--color-muted)',
-        fontFamily: 'var(--font-heading)',
-        fontSize: '0.8rem',
-        fontWeight: 500,
-        letterSpacing: '0.04em',
-        cursor: 'pointer',
-        transition: 'all 0.15s ease',
-        whiteSpace: 'nowrap',
-      }}
-    >
-      {children}
-    </button>
-  )
-}
+const eraOrder: EraId[] = [
+  'dawn-of-the-jedi', 'old-republic', 'high-republic',
+  'fall-of-the-jedi', 'reign-of-the-empire', 'age-of-rebellion',
+  'new-republic', 'rise-of-the-first-order', 'new-jedi-order',
+]
 
 export default function Timeline() {
   const [searchParams] = useSearchParams()
   const initialEra = searchParams.get('era') as EraId | null
 
-  const [selectedEra, setSelectedEra] = useState<EraId | 'all'>(initialEra ?? 'all')
-  const [selectedType, setSelectedType] = useState<WorkType | 'all'>('all')
+  const [selectedEra, setSelectedEra]             = useState<EraId | 'all'>(initialEra ?? 'all')
+  const [selectedType, setSelectedType]           = useState<WorkType | 'all'>('all')
   const [selectedImportance, setSelectedImportance] = useState<Importance | 'all'>('all')
 
   const filtered = useMemo(() => {
@@ -83,45 +61,21 @@ export default function Timeline() {
     return groups
   }, [filtered])
 
-  const eraOrder: EraId[] = [
-    'dawn-of-the-jedi', 'old-republic', 'high-republic',
-    'fall-of-the-jedi', 'reign-of-the-empire', 'age-of-rebellion',
-    'new-republic', 'rise-of-the-first-order',
-  ]
-
   const eraMap = Object.fromEntries(eras.map(e => [e.id, e]))
 
   return (
-    <main style={{ maxWidth: '1280px', margin: '0 auto', padding: '6rem 1.5rem 4rem' }}>
-      {/* Header */}
+    <main className="ag-page-wide">
       <div style={{ marginBottom: '2.5rem' }}>
-        <p style={{ fontFamily: 'var(--font-heading)', fontSize: '0.75rem', letterSpacing: '0.25em', textTransform: 'uppercase', color: 'var(--color-accent-blue)', margin: '0 0 0.5rem' }}>
-          Films & Séries
-        </p>
-        <h1 style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(2rem, 5vw, 3rem)', fontWeight: 700, color: 'var(--color-text)', margin: '0 0 0.75rem' }}>
-          Chronologie
-        </h1>
-        <p style={{ color: 'var(--color-muted)', margin: 0, maxWidth: '560px', lineHeight: 1.6 }}>
-          Films et séries placés dans l'ordre de l'univers. Les jeux vidéo et les romans ont leurs propres sections.
+        <p className="ag-eyebrow">Films &amp; Séries</p>
+        <h1 className="ag-page-title">Chronologie</h1>
+        <p className="ag-lead">
+          Films et séries placés dans l'ordre de l'univers. Les jeux vidéo ont leur propre section.
         </p>
       </div>
 
-      {/* Filters */}
-      <div style={{
-        background: 'var(--color-surface)',
-        border: '1px solid var(--color-border)',
-        borderRadius: '8px',
-        padding: '1rem 1.25rem',
-        marginBottom: '2.5rem',
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '0.75rem',
-      }}>
-        {/* Era filter */}
-        <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', alignItems: 'center' }}>
-          <span style={{ fontSize: '0.72rem', color: 'var(--color-muted)', fontFamily: 'var(--font-heading)', letterSpacing: '0.06em', textTransform: 'uppercase', marginRight: '0.25rem' }}>
-            Ère
-          </span>
+      <div className="ag-filters ag-filters--column">
+        <div className="ag-filter-group">
+          <span className="ag-filter-label">Ère</span>
           <FilterBtn active={selectedEra === 'all'} onClick={() => setSelectedEra('all')}>Toutes</FilterBtn>
           {eras.map(era => (
             <FilterBtn key={era.id} active={selectedEra === era.id} onClick={() => setSelectedEra(era.id)}>
@@ -129,23 +83,17 @@ export default function Timeline() {
             </FilterBtn>
           ))}
         </div>
-
-        {/* Type + Importance filters */}
         <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
-          <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', alignItems: 'center' }}>
-            <span style={{ fontSize: '0.72rem', color: 'var(--color-muted)', fontFamily: 'var(--font-heading)', letterSpacing: '0.06em', textTransform: 'uppercase', marginRight: '0.25rem' }}>
-              Type
-            </span>
+          <div className="ag-filter-group">
+            <span className="ag-filter-label">Type</span>
             {typeOptions.map(opt => (
               <FilterBtn key={opt.value} active={selectedType === opt.value} onClick={() => setSelectedType(opt.value)}>
                 {opt.label}
               </FilterBtn>
             ))}
           </div>
-          <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', alignItems: 'center' }}>
-            <span style={{ fontSize: '0.72rem', color: 'var(--color-muted)', fontFamily: 'var(--font-heading)', letterSpacing: '0.06em', textTransform: 'uppercase', marginRight: '0.25rem' }}>
-              Importance
-            </span>
+          <div className="ag-filter-group">
+            <span className="ag-filter-label">Importance</span>
             {importanceOptions.map(opt => (
               <FilterBtn key={opt.value} active={selectedImportance === opt.value} onClick={() => setSelectedImportance(opt.value)}>
                 {opt.label}
@@ -155,14 +103,12 @@ export default function Timeline() {
         </div>
       </div>
 
-      {/* Results count */}
-      <p style={{ fontSize: '0.8rem', color: 'var(--color-muted)', marginBottom: '2rem' }}>
+      <p className="ag-meta" style={{ marginBottom: '2rem' }}>
         {filtered.length} œuvre{filtered.length > 1 ? 's' : ''}
       </p>
 
-      {/* Grouped by era */}
       {filtered.length === 0 ? (
-        <p style={{ color: 'var(--color-muted)', textAlign: 'center', padding: '4rem 0' }}>
+        <p className="ag-meta" style={{ textAlign: 'center', padding: '4rem 0' }}>
           Aucun résultat pour ces filtres.
         </p>
       ) : (
@@ -174,7 +120,6 @@ export default function Timeline() {
 
             return (
               <section key={eraId}>
-                {/* Era header */}
                 <div style={{
                   display: 'flex',
                   alignItems: 'center',
@@ -195,16 +140,13 @@ export default function Timeline() {
                     <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.3rem', fontWeight: 600, color: 'var(--color-text)', margin: 0 }}>
                       {era?.name ?? eraId}
                     </h2>
-                    <p style={{ fontSize: '0.75rem', color: 'var(--color-accent-blue)', margin: 0 }}>
+                    <p className="ag-meta" style={{ color: 'var(--color-accent-blue)', margin: 0 }}>
                       {era?.period}
                     </p>
                   </div>
                 </div>
-
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', gap: '1rem' }}>
-                  {works.map(work => (
-                    <MediaCard key={work.id} work={work} />
-                  ))}
+                <div className="ag-grid-media--sm">
+                  {works.map(work => <MediaCard key={work.id} work={work} />)}
                 </div>
               </section>
             )

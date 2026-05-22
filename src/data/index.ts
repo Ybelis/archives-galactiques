@@ -1,5 +1,7 @@
 export { eras } from './eras'
 export { films } from './films'
 export { series } from './series'
+export { games } from './games'
 export { paths } from './paths'
 export { glossaryEntries } from './glossary'
+export { databankEntries } from './databank'

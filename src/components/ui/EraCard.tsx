@@ -7,53 +7,55 @@ interface Props {
 
 export default function EraCard({ era }: Props) {
   return (
-    <Link
-      to={`/chronologie?era=${era.id}`}
-      style={{ textDecoration: 'none' }}
-    >
+    <Link to={`/eres/${era.id}`} style={{ textDecoration: 'none' }}>
       <article
         className="card-glow"
         style={{
           background: 'var(--color-surface)',
           border: '1px solid var(--color-border)',
           borderRadius: '8px',
-          overflow: 'hidden',
-          width: '220px',
+          padding: '1rem',
+          display: 'flex',
+          alignItems: 'flex-start',
+          gap: '0.875rem',
+          width: '260px',
           flexShrink: 0,
           cursor: 'pointer',
         }}
       >
-        {/* Era image */}
-        <div style={{ height: '130px', background: 'var(--color-surface-elevated)', position: 'relative', overflow: 'hidden' }}>
+        <div style={{
+          width: '44px',
+          height: '44px',
+          flexShrink: 0,
+          borderRadius: '6px',
+          overflow: 'hidden',
+          background: 'var(--color-surface-elevated)',
+          border: '1px solid rgba(148,197,255,0.1)',
+        }}>
           <img
             src={era.image}
-            alt={era.name}
+            alt=""
             loading="lazy"
-            style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+            style={{ width: '100%', height: '100%', objectFit: 'contain', display: 'block', padding: '4px' }}
             onError={(e) => { (e.target as HTMLImageElement).style.opacity = '0' }}
           />
-          <div style={{
-            position: 'absolute',
-            inset: 0,
-            background: 'linear-gradient(to top, rgba(7,11,19,0.85) 0%, transparent 60%)',
-          }} />
         </div>
 
-        <div style={{ padding: '0.85rem' }}>
+        <div style={{ flex: 1, minWidth: 0 }}>
           <h3 style={{
             fontFamily: 'var(--font-heading)',
-            fontSize: '0.95rem',
+            fontSize: '0.9rem',
             fontWeight: 600,
             color: 'var(--color-text)',
-            margin: '0 0 0.3rem',
-            letterSpacing: '0.03em',
+            margin: '0 0 0.2rem',
+            letterSpacing: '0.02em',
           }}>
             {era.name}
           </h3>
-          <p style={{ fontSize: '0.7rem', color: 'var(--color-accent-blue)', margin: '0 0 0.5rem', fontFamily: 'var(--font-body)' }}>
+          <p style={{ fontSize: '0.68rem', color: 'var(--color-accent-blue)', margin: '0 0 0.35rem' }}>
             {era.period}
           </p>
-          <p style={{ fontSize: '0.76rem', color: 'var(--color-muted)', margin: 0, lineHeight: 1.45 }} className="line-clamp-2">
+          <p style={{ fontSize: '0.73rem', color: 'var(--color-muted)', margin: 0, lineHeight: 1.4 }} className="line-clamp-2">
             {era.shortDescription}
           </p>
         </div>
