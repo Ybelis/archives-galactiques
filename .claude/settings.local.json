@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(mkdir public *)",
+      "Bash(Move-Item media *)",
+      "Bash(mkdir -p public)",
+      "Bash(mv media *)",
+      "Bash(npm install *)",
+      "Bash(npm run *)"
+    ]
+  }
+}
