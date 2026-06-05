@@ -76,16 +76,100 @@ p { line-height: 1.75; }
   to   { opacity: 1; transform: translateY(0) scale(1); }
 }
 
+/* reveal on scroll (driven by useReveal hook adding .is-visible) */
+@keyframes reveal-up {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes reveal-fade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* lightsaber pulse — accent borders / glow elements */
+@keyframes saber-pulse {
+  0%, 100% { box-shadow: 0 0 6px 0 var(--saber-color, rgba(79,195,247,0.5)); }
+  50%       { box-shadow: 0 0 16px 3px var(--saber-color, rgba(79,195,247,0.7)); }
+}
+
+/* hyperspace — horizontal streaks (use on ::before / ::after) */
+@keyframes hyperspace {
+  from { transform: scaleX(0); opacity: 0.9; }
+  to   { transform: scaleX(1); opacity: 0; }
+}
+
+/* floating — slow vertical drift for ambient elements */
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-8px); }
+}
+
+/* title glitch — quick horizontal jitter for headings */
+@keyframes glitch {
+  0%, 100% { clip-path: inset(0 0 100% 0); transform: none; }
+  10%       { clip-path: inset(10% 0 60% 0); transform: translateX(-3px); }
+  20%       { clip-path: inset(60% 0 10% 0); transform: translateX(3px); }
+  30%       { clip-path: inset(30% 0 30% 0); transform: translateX(-2px); }
+  40%       { clip-path: inset(0 0 0 0);     transform: none; }
+}
+
 @media (prefers-reduced-motion: no-preference) {
+  /* load-time fade-up (existing) */
   .ag-fade-up { animation: ag-fade-up 0.4s ease both; opacity: 0; }
   .ag-d1 { animation-delay: 0.08s; }
   .ag-d2 { animation-delay: 0.16s; }
   .ag-d3 { animation-delay: 0.26s; }
   .ag-d4 { animation-delay: 0.36s; }
   .ag-d5 { animation-delay: 0.46s; }
+
+  /* scroll reveal — initial hidden state */
+  .ag-reveal          { opacity: 0; transform: translateY(18px); transition: opacity 0.55s ease, transform 0.55s ease; }
+  .ag-reveal.is-visible { opacity: 1; transform: translateY(0); }
+
+  .ag-reveal--fade    { opacity: 0; transform: none; transition: opacity 0.6s ease; }
+  .ag-reveal--fade.is-visible { opacity: 1; }
+
+  /* stagger helpers for grid children — apply on the grid parent */
+  .ag-reveal-stagger > * {
+    opacity: 0;
+    transform: translateY(14px);
+    transition: opacity 0.45s ease, transform 0.45s ease;
+  }
+  .ag-reveal-stagger.is-visible > *         { opacity: 1; transform: translateY(0); }
+  .ag-reveal-stagger.is-visible > *:nth-child(1)  { transition-delay: 0.00s; }
+  .ag-reveal-stagger.is-visible > *:nth-child(2)  { transition-delay: 0.07s; }
+  .ag-reveal-stagger.is-visible > *:nth-child(3)  { transition-delay: 0.14s; }
+  .ag-reveal-stagger.is-visible > *:nth-child(4)  { transition-delay: 0.21s; }
+  .ag-reveal-stagger.is-visible > *:nth-child(5)  { transition-delay: 0.28s; }
+  .ag-reveal-stagger.is-visible > *:nth-child(6)  { transition-delay: 0.35s; }
+  .ag-reveal-stagger.is-visible > *:nth-child(n+7){ transition-delay: 0.42s; }
+
+  /* lightsaber glow */
+  .saber-glow         { animation: saber-pulse 2.8s ease-in-out infinite; }
+  .saber-glow--blue   { --saber-color: rgba(79, 195, 247, 0.6); }
+  .saber-glow--yellow { --saber-color: rgba(253, 230, 138, 0.6); }
+  .saber-glow--purple { --saber-color: rgba(167, 139, 250, 0.6); }
+  .saber-glow--red    { --saber-color: rgba(248, 113, 113, 0.6); }
+
+  /* floating ambient */
+  .ag-float { animation: float 5s ease-in-out infinite; }
+
+  /* hyperspace bar — decorative horizontal line that fires once */
+  .ag-hyperspace-bar::after {
+    content: '';
+    display: block;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--color-accent-blue), transparent);
+    transform-origin: left center;
+    animation: hyperspace 0.6s ease-out forwards;
+  }
 }
+
 @media (prefers-reduced-motion: reduce) {
-  .ag-fade-up { opacity: 1; animation: none !important; }
+  .ag-fade-up          { opacity: 1; animation: none !important; }
+  .ag-reveal           { opacity: 1; transform: none; transition: none; }
+  .ag-reveal--fade     { opacity: 1; transition: none; }
+  .ag-reveal-stagger > * { opacity: 1; transform: none; transition: none; }
 }
 
 /* ── Background utilities ────────────────────────────────── */
