@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Archives Galactiques</title>
+  <meta name="description" content="Un guide Star Wars par un fan, pour les futurs fans. En construction." />
+  <meta property="og:title" content="Archives Galactiques" />
+  <meta property="og:description" content="Un guide Star Wars par un fan — pas par un algo." />
+  <meta property="og:type" content="website" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,400;0,600;0,700;1,400&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:       #07080f;
+      --surface:  #0d1424;
+      --border:   rgba(255,255,255,0.08);
+      --text:     #e8eaf2;
+      --muted:    #6b7280;
+      --blue:     #4fc3f7;
+      --yellow:   #fbbf24;
+      --font-h:   'Barlow Condensed', sans-serif;
+      --font-b:   'Barlow', sans-serif;
+    }
+
+    html, body {
+      height: 100%;
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-b);
+    }
+
+    /* Stars canvas */
+    #stars {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Layout */
+    main {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 3rem 1.5rem;
+      text-align: center;
+    }
+
+    /* Lang toggle */
+    .lang-toggle {
+      position: fixed;
+      top: 1.5rem;
+      right: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-family: var(--font-h);
+      font-size: 0.78rem;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+    }
+    .lang-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-family: var(--font-h);
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      padding: 0.2rem 0.35rem;
+      border-radius: 3px;
+      transition: color 0.15s ease;
+    }
+    .lang-btn.active { color: var(--blue); }
+    .lang-btn:hover:not(.active) { color: var(--text); }
+
+    /* Logo */
+    .logo {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      line-height: 1;
+      margin-bottom: 2.5rem;
+    }
+    .logo-title {
+      font-family: var(--font-h);
+      font-size: clamp(2.4rem, 8vw, 4rem);
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--text);
+    }
+    .logo-sub {
+      font-family: var(--font-h);
+      font-size: clamp(0.7rem, 2.5vw, 1rem);
+      font-weight: 500;
+      letter-spacing: 0.5em;
+      text-transform: uppercase;
+      color: var(--blue);
+      margin-top: 0.2rem;
+    }
+
+    /* Tagline */
+    .tagline {
+      font-family: var(--font-h);
+      font-size: clamp(1.1rem, 3.5vw, 1.5rem);
+      font-weight: 400;
+      font-style: italic;
+      color: var(--text);
+      line-height: 1.4;
+      margin-bottom: 1.2rem;
+      max-width: 520px;
+    }
+
+    /* Description */
+    .desc {
+      font-size: clamp(0.85rem, 2vw, 0.95rem);
+      font-weight: 300;
+      color: var(--muted);
+      line-height: 1.7;
+      margin-bottom: 2.5rem;
+      max-width: 440px;
+    }
+
+    /* WIP badge */
+    .wip-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.55rem;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 0.45rem 1rem;
+      font-family: var(--font-h);
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 3rem;
+    }
+    .wip-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--yellow);
+      animation: pulse 2.4s ease-in-out infinite;
+      flex-shrink: 0;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(251, 191, 36, 0.4); }
+      50% { opacity: 0.7; box-shadow: 0 0 0 5px rgba(251, 191, 36, 0); }
+    }
+
+    /* Separator */
+    .separator {
+      width: 48px;
+      height: 1px;
+      background: var(--border);
+      margin-bottom: 2rem;
+    }
+
+    /* Footer note */
+    .footer-note {
+      font-size: 0.72rem;
+      color: rgba(107, 114, 128, 0.6);
+      letter-spacing: 0.05em;
+    }
+
+    /* Sections intro */
+    .section-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 0.75rem;
+      max-width: 520px;
+      width: 100%;
+      margin-bottom: 2.5rem;
+    }
+    .section-item {
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 0.8rem 0.6rem;
+      font-family: var(--font-h);
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      transition: border-color 0.2s ease, color 0.2s ease;
+    }
+    .section-item:hover {
+      border-color: rgba(79, 195, 247, 0.25);
+      color: var(--text);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .wip-dot { animation: none; }
+    }
+  </style>
+</head>
+<body>
+
+<canvas id="stars"></canvas>
+
+<div class="lang-toggle">
+  <button class="lang-btn active" data-lang="fr" onclick="setLang('fr')">FR</button>
+  <span>·</span>
+  <button class="lang-btn" data-lang="en" onclick="setLang('en')">EN</button>
+</div>
+
+<main>
+  <div class="logo">
+    <span class="logo-title">Archives</span>
+    <span class="logo-sub">Galactiques</span>
+  </div>
+
+  <p class="tagline" id="tagline">
+    Un guide Star Wars fait par un fan,<br>pas par un algo.
+  </p>
+
+  <p class="desc" id="desc">
+    Films, séries, jeux vidéo, ères galactiques.<br>
+    Des parcours pour découvrir l'univers dans l'ordre — sans se perdre.
+  </p>
+
+  <div class="section-grid" id="sections">
+    <div class="section-item">Films</div>
+    <div class="section-item">Séries</div>
+    <div class="section-item">Jeux</div>
+    <div class="section-item">Chronologie</div>
+    <div class="section-item">Parcours</div>
+    <div class="section-item">Databank</div>
+  </div>
+
+  <div class="wip-badge">
+    <span class="wip-dot"></span>
+    <span id="wip-label">En construction</span>
+  </div>
+
+  <div class="separator"></div>
+
+  <p class="footer-note" id="footer-note">
+    Site non-officiel · Aucune affiliation avec Lucasfilm ou Disney
+  </p>
+</main>
+
+<script>
+  // ─── Stars ───────────────────────────────────────────────────────────────────
+  (function () {
+    const canvas = document.getElementById('stars')
+    const ctx = canvas.getContext('2d')
+    let stars = []
+
+    function resize() {
+      canvas.width  = window.innerWidth
+      canvas.height = window.innerHeight
+      draw()
+    }
+
+    function init() {
+      const count = Math.floor((canvas.width * canvas.height) / 4200)
+      stars = Array.from({ length: count }, () => ({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        r: Math.random() * 0.9 + 0.3,
+        o: Math.random() * 0.55 + 0.15,
+      }))
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height)
+      init()
+      stars.forEach(s => {
+        ctx.beginPath()
+        ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2)
+        ctx.fillStyle = `rgba(220, 230, 255, ${s.o})`
+        ctx.fill()
+      })
+    }
+
+    window.addEventListener('resize', resize)
+    resize()
+  })()
+
+  // ─── i18n ────────────────────────────────────────────────────────────────────
+  const strings = {
+    fr: {
+      tagline:     'Un guide Star Wars fait par un fan,<br>pas par un algo.',
+      desc:        'Films, séries, jeux vidéo, ères galactiques.<br>Des parcours pour découvrir l\'univers dans l\'ordre — sans se perdre.',
+      sections:    ['Films', 'Séries', 'Jeux', 'Chronologie', 'Parcours', 'Databank'],
+      wip:         'En construction',
+      footer:      'Site non-officiel · Aucune affiliation avec Lucasfilm ou Disney',
+    },
+    en: {
+      tagline:     'A Star Wars fan guide<br>made by a fan, not an algorithm.',
+      desc:        'Films, series, video games, galactic eras.<br>Curated paths to explore the universe — without spoilers.',
+      sections:    ['Films', 'Series', 'Games', 'Timeline', 'Paths', 'Databank'],
+      wip:         'Work in progress',
+      footer:      'Unofficial fan site · No affiliation with Lucasfilm or Disney',
+    },
+  }
+
+  function setLang(lang) {
+    const s = strings[lang]
+    document.getElementById('tagline').innerHTML    = s.tagline
+    document.getElementById('desc').innerHTML       = s.desc
+    document.getElementById('wip-label').textContent = s.wip
+    document.getElementById('footer-note').textContent = s.footer
+
+    const items = document.querySelectorAll('#sections .section-item')
+    s.sections.forEach((label, i) => { if (items[i]) items[i].textContent = label })
+
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.lang === lang)
+    })
+
+    document.documentElement.lang = lang
+  }
+</script>
+</body>
+</html>
