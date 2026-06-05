@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -10,27 +11,53 @@
   <meta property="og:type" content="website" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,400;0,600;0,700;1,400&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="icon" type="image/png" href="../public/media/logo.png" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,400;0,600;0,700;1,400&family=Barlow:wght@300;400;500&display=swap"
+    rel="stylesheet" />
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    :root {
-      --bg:       #07080f;
-      --surface:  #0d1424;
-      --border:   rgba(255,255,255,0.08);
-      --text:     #e8eaf2;
-      --muted:    #6b7280;
-      --blue:     #4fc3f7;
-      --yellow:   #fbbf24;
-      --font-h:   'Barlow Condensed', sans-serif;
-      --font-b:   'Barlow', sans-serif;
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
     }
 
-    html, body {
+    :root {
+      --bg: #07080f;
+      --surface: #0d1424;
+      --border: rgba(255, 255, 255, 0.08);
+      --text: #e8eaf2;
+      --muted: #6b7280;
+      --blue: #4fc3f7;
+      --yellow: #fbbf24;
+      --font-h: 'Barlow Condensed', sans-serif;
+      --font-b: 'Barlow', sans-serif;
+    }
+
+    html,
+    body {
       height: 100%;
       background: var(--bg);
       color: var(--text);
       font-family: var(--font-b);
+    }
+
+    html {
+      font-size: 18px;
+    }
+
+    @media (min-width: 1200px) {
+      html {
+        font-size: 20px;
+      }
+    }
+
+    @media (min-width: 1800px) {
+      html {
+        font-size: 22px;
+      }
     }
 
     /* Stars canvas */
@@ -60,6 +87,7 @@
       top: 1.5rem;
       right: 1.5rem;
       display: flex;
+      z-index: 5;
       align-items: center;
       gap: 0.35rem;
       font-family: var(--font-h);
@@ -67,6 +95,7 @@
       letter-spacing: 0.1em;
       color: var(--muted);
     }
+
     .lang-btn {
       background: none;
       border: none;
@@ -81,8 +110,14 @@
       border-radius: 3px;
       transition: color 0.15s ease;
     }
-    .lang-btn.active { color: var(--blue); }
-    .lang-btn:hover:not(.active) { color: var(--text); }
+
+    .lang-btn.active {
+      color: var(--blue);
+    }
+
+    .lang-btn:hover:not(.active) {
+      color: var(--text);
+    }
 
     /* Logo */
     .logo {
@@ -92,6 +127,7 @@
       line-height: 1;
       margin-bottom: 2.5rem;
     }
+
     .logo-title {
       font-family: var(--font-h);
       font-size: clamp(2.4rem, 8vw, 4rem);
@@ -100,6 +136,7 @@
       text-transform: uppercase;
       color: var(--text);
     }
+
     .logo-sub {
       font-family: var(--font-h);
       font-size: clamp(0.7rem, 2.5vw, 1rem);
@@ -148,6 +185,7 @@
       color: var(--muted);
       margin-bottom: 3rem;
     }
+
     .wip-dot {
       width: 7px;
       height: 7px;
@@ -156,9 +194,19 @@
       animation: pulse 2.4s ease-in-out infinite;
       flex-shrink: 0;
     }
+
     @keyframes pulse {
-      0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(251, 191, 36, 0.4); }
-      50% { opacity: 0.7; box-shadow: 0 0 0 5px rgba(251, 191, 36, 0); }
+
+      0%,
+      100% {
+        opacity: 1;
+        box-shadow: 0 0 0 0 rgba(251, 191, 36, 0.4);
+      }
+
+      50% {
+        opacity: 0.7;
+        box-shadow: 0 0 0 5px rgba(251, 191, 36, 0);
+      }
     }
 
     /* Separator */
@@ -185,6 +233,7 @@
       width: 100%;
       margin-bottom: 2.5rem;
     }
+
     .section-item {
       border: 1px solid var(--border);
       border-radius: 6px;
@@ -197,134 +246,422 @@
       color: var(--muted);
       transition: border-color 0.2s ease, color 0.2s ease;
     }
+
     .section-item:hover {
       border-color: rgba(79, 195, 247, 0.25);
       color: var(--text);
     }
 
     @media (prefers-reduced-motion: reduce) {
-      .wip-dot { animation: none; }
+      .wip-dot {
+        animation: none;
+      }
+    }
+
+    .term-tooltip {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      color: var(--blue);
+      font-weight: 500;
+      cursor: help;
+      border-bottom: 1px solid rgba(79, 195, 247, 0.45);
+      outline: none;
+    }
+
+    .term-tooltip::before {
+      content: attr(data-tip);
+      position: absolute;
+      left: 50%;
+      bottom: calc(100% + 0.7rem);
+      transform: translateX(-50%) translateY(4px);
+      width: max-content;
+      max-width: 260px;
+      padding: 0.65rem 0.8rem;
+
+      background: rgba(7, 8, 15, 0.96);
+      border: 1px solid rgba(79, 195, 247, 0.35);
+      border-radius: 4px;
+      box-shadow:
+        0 0 18px rgba(79, 195, 247, 0.12),
+        inset 0 0 12px rgba(79, 195, 247, 0.04);
+
+      font-family: var(--font-b);
+      font-size: 0.72rem;
+      font-weight: 300;
+      line-height: 1.5;
+      color: var(--text);
+      text-align: left;
+      letter-spacing: 0.02em;
+
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.18s ease, transform 0.18s ease;
+      z-index: 10;
+    }
+
+    .term-tooltip::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      bottom: calc(100% + 0.35rem);
+      transform: translateX(-50%);
+      width: 7px;
+      height: 7px;
+      background: rgba(7, 8, 15, 0.96);
+      border-right: 1px solid rgba(79, 195, 247, 0.35);
+      border-bottom: 1px solid rgba(79, 195, 247, 0.35);
+      rotate: 45deg;
+
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.18s ease;
+      z-index: 11;
+    }
+
+    .term-tooltip:hover::before,
+    .term-tooltip:focus-visible::before {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .term-tooltip:hover::after,
+    .term-tooltip:focus-visible::after {
+      opacity: 1;
+    }
+
+    /* Intro loader */
+    .intro-loader {
+      position: fixed;
+      inset: 0;
+      z-index: 50;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background:
+        radial-gradient(circle at center, rgba(79, 195, 247, 0.08), transparent 34%),
+        #07080f;
+      overflow: hidden;
+      animation: introExit 0.7s ease forwards;
+      animation-delay: 5s;
+    }
+
+    .intro-loader::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(to bottom,
+          transparent 0%,
+          rgba(79, 195, 247, 0.05) 50%,
+          transparent 100%);
+      transform: translateY(-100%);
+      animation: scan 1.4s ease-out forwards;
+    }
+
+    .intro-content {
+      position: relative;
+      text-align: center;
+      transform: perspective(500px) rotateX(10deg);
+      animation: introContent 1.7s ease forwards;
+    }
+
+    .intro-kicker {
+      font-family: var(--font-h);
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--blue);
+      margin-bottom: 0.75rem;
+    }
+
+    .intro-line {
+      width: 0;
+      height: 1px;
+      margin: 0 auto 1rem;
+      background: rgba(79, 195, 247, 0.75);
+      box-shadow: 0 0 14px rgba(79, 195, 247, 0.55);
+      animation: lineReveal 0.8s ease forwards;
+      animation-delay: 0.35s;
+    }
+
+    .intro-title {
+      font-family: var(--font-h);
+      font-size: clamp(2rem, 7vw, 4rem);
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--text);
+      opacity: 0;
+      animation: titleReveal 0.8s ease forwards;
+      animation-delay: 0.65s;
+    }
+
+    .intro-sub {
+      margin-top: 0.7rem;
+      font-size: 0.8rem;
+      font-weight: 300;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      opacity: 0;
+      animation: titleReveal 0.7s ease forwards;
+      animation-delay: 1s;
+    }
+
+    @keyframes scan {
+      to {
+        transform: translateY(100%);
+      }
+    }
+
+    @keyframes lineReveal {
+      to {
+        width: min(320px, 70vw);
+      }
+    }
+
+    @keyframes titleReveal {
+      from {
+        opacity: 0;
+        transform: translateY(8px) scale(0.98);
+        filter: blur(4px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+        filter: blur(0);
+      }
+    }
+
+    @keyframes introContent {
+      from {
+        opacity: 0;
+        transform: perspective(500px) rotateX(18deg) translateY(16px);
+      }
+
+      to {
+        opacity: 1;
+        transform: perspective(500px) rotateX(10deg) translateY(0);
+      }
+    }
+
+    @keyframes introExit {
+      to {
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .intro-loader {
+        animation: introExit 0.2s ease forwards;
+        animation-delay: 0.4s;
+      }
+
+      .intro-loader::before,
+      .intro-content,
+      .intro-line,
+      .intro-title,
+      .intro-sub {
+        animation: none;
+      }
+
+      .intro-line {
+        width: min(320px, 70vw);
+      }
+
+      .intro-title,
+      .intro-sub {
+        opacity: 1;
+      }
+    }
+
+    .lang-animated {
+      transition:
+        opacity 0.22s ease,
+        transform 0.22s ease,
+        filter 0.22s ease;
+    }
+
+    .lang-switching .lang-animated {
+      opacity: 0;
+      transform: translateY(8px);
+      filter: blur(4px);
     }
   </style>
 </head>
+
 <body>
 
-<canvas id="stars"></canvas>
-
-<div class="lang-toggle">
-  <button class="lang-btn active" data-lang="fr" onclick="setLang('fr')">FR</button>
-  <span>·</span>
-  <button class="lang-btn" data-lang="en" onclick="setLang('en')">EN</button>
-</div>
-
-<main>
-  <div class="logo">
-    <span class="logo-title">Archives</span>
-    <span class="logo-sub">Galactiques</span>
+  <div class="intro-loader" id="intro-loader" aria-hidden="true">
+    <div class="intro-content">
+      <p class="intro-kicker">Transmission reçue</p>
+      <div class="intro-line"></div>
+      <p class="intro-title">Archives Galactiques</p>
+      <p class="intro-sub">Initialisation de la databank...</p>
+    </div>
   </div>
 
-  <p class="tagline" id="tagline">
-    Un guide Star Wars fait par un fan,<br>pas par un algo.
-  </p>
+  <canvas id="stars"></canvas>
 
-  <p class="desc" id="desc">
-    Films, séries, jeux vidéo, ères galactiques.<br>
-    Des parcours pour découvrir l'univers dans l'ordre — sans se perdre.
-  </p>
-
-  <div class="section-grid" id="sections">
-    <div class="section-item">Films</div>
-    <div class="section-item">Séries</div>
-    <div class="section-item">Jeux</div>
-    <div class="section-item">Chronologie</div>
-    <div class="section-item">Parcours</div>
-    <div class="section-item">Databank</div>
+  <div class="lang-toggle">
+    <button class="lang-btn active" data-lang="fr" type="button">FR</button>
+    <span>·</span>
+    <button class="lang-btn" data-lang="en" type="button">EN</button>
   </div>
 
-  <div class="wip-badge">
-    <span class="wip-dot"></span>
-    <span id="wip-label">En construction</span>
-  </div>
+  <main>
+    <div class="logo">
+      <span class="logo-title">Archives</span>
+      <span class="logo-sub">Galactiques</span>
+    </div>
 
-  <div class="separator"></div>
+    <p class="tagline lang-animated" id="tagline"></p>
 
-  <p class="footer-note" id="footer-note">
-    Site non-officiel · Aucune affiliation avec Lucasfilm ou Disney
-  </p>
-</main>
+    <p class="desc lang-animated" id="desc"></p>
 
-<script>
-  // ─── Stars ───────────────────────────────────────────────────────────────────
-  (function () {
-    const canvas = document.getElementById('stars')
-    const ctx = canvas.getContext('2d')
-    let stars = []
+    <div class="section-grid lang-animated" id="sections">
+      <div class="section-item">Films</div>
+      <div class="section-item">Séries</div>
+      <div class="section-item">Jeux</div>
+      <div class="section-item">Chronologie</div>
+      <div class="section-item">Parcours</div>
+      <div class="section-item">Databank</div>
+    </div>
 
-    function resize() {
-      canvas.width  = window.innerWidth
-      canvas.height = window.innerHeight
-      draw()
+    <div class="wip-badge">
+      <span class="wip-dot"></span>
+      <span id="wip-label" class="lang-animated">Site en construction</span>
+    </div>
+
+    <div class="separator"></div>
+
+    <p class="footer-note lang-animated" id="footer-note">
+      Site non-officiel · Aucune affiliation avec Lucasfilm ou Disney
+    </p>
+  </main>
+
+  <script>
+    // ─── Stars ───────────────────────────────────────────────────────────────────
+    (function () {
+      const canvas = document.getElementById('stars')
+      const ctx = canvas.getContext('2d')
+      let stars = []
+
+      function resize() {
+        canvas.width = window.innerWidth
+        canvas.height = window.innerHeight
+        draw()
+      }
+
+      function init() {
+        const count = Math.floor((canvas.width * canvas.height) / 4200)
+        stars = Array.from({ length: count }, () => ({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          r: Math.random() * 0.9 + 0.3,
+          o: Math.random() * 0.55 + 0.15,
+        }))
+      }
+
+      function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height)
+        init()
+        stars.forEach(s => {
+          ctx.beginPath()
+          ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2)
+          ctx.fillStyle = `rgba(220, 230, 255, ${s.o})`
+          ctx.fill()
+        })
+      }
+
+      window.addEventListener('resize', resize)
+      resize()
+    })()
+
+    // ─── i18n ────────────────────────────────────────────────────────────────────
+    const strings = {
+      fr: {
+        tagline: 'Le guide Star Wars pour savoir<br>par où commencer.',
+        desc: `Films, séries, jeux vidéo, chronologie. <br> 
+      <span class="term-tooltip" tabindex="0" data-tip="L’histoire officielle de Star Wars aujourd’hui : films, séries, jeux et œuvres reconnus dans la continuité actuelle.">Canon</span> 
+      et 
+      <span class="term-tooltip" tabindex="0" data-tip="Les récits non officiels ou retirés de la continuité principale, souvent issus de l’ancien univers étendu.">Legends</span>.<br>
+      Des parcours clairs pour explorer la galaxie sans se perdre.`,
+        sections: ['Films', 'Séries', 'Jeux', 'Chronologie', 'Parcours', 'Databank'],
+        wip: 'Site en construction',
+        footer: 'Site non-officiel · Aucune affiliation avec Lucasfilm ou Disney',
+      },
+
+      en: {
+        tagline: 'The Star Wars guide for knowing<br>where to begin.',
+        desc: `Films, series, video games, timeline.<br>
+      <span class="term-tooltip" tabindex="0" data-tip="The official Star Wars continuity today: films, series, games and stories recognized as part of the current canon.">Canon</span> 
+      and 
+      <span class="term-tooltip" tabindex="0" data-tip="Stories outside the main continuity, often from the former Expanded Universe.">Legends</span>.<br>
+      Clear paths to explore the galaxy without getting lost.`,
+        sections: ['Films', 'Series', 'Games', 'Timeline', 'Paths', 'Databank'],
+        wip: 'Work in progress',
+        footer: 'Unofficial fan site · No affiliation with Lucasfilm or Disney',
+      },
     }
 
-    function init() {
-      const count = Math.floor((canvas.width * canvas.height) / 4200)
-      stars = Array.from({ length: count }, () => ({
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height,
-        r: Math.random() * 0.9 + 0.3,
-        o: Math.random() * 0.55 + 0.15,
-      }))
-    }
+    let currentLang = null
+    let langTimeout = null
 
-    function draw() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height)
-      init()
-      stars.forEach(s => {
-        ctx.beginPath()
-        ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2)
-        ctx.fillStyle = `rgba(220, 230, 255, ${s.o})`
-        ctx.fill()
+    function applyLang(lang) {
+      const s = strings[lang]
+
+      document.getElementById('tagline').innerHTML = s.tagline
+      document.getElementById('desc').innerHTML = s.desc
+      document.getElementById('wip-label').textContent = s.wip
+      document.getElementById('footer-note').textContent = s.footer
+
+      const items = document.querySelectorAll('#sections .section-item')
+      s.sections.forEach((label, i) => {
+        if (items[i]) items[i].textContent = label
       })
+
+      document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.lang === lang)
+      })
+
+      document.documentElement.lang = lang
+      currentLang = lang
     }
 
-    window.addEventListener('resize', resize)
-    resize()
-  })()
+    function setLang(lang, animated = true) {
+      if (lang === currentLang) return
 
-  // ─── i18n ────────────────────────────────────────────────────────────────────
-  const strings = {
-    fr: {
-      tagline:     'Un guide Star Wars fait par un fan,<br>pas par un algo.',
-      desc:        'Films, séries, jeux vidéo, ères galactiques.<br>Des parcours pour découvrir l\'univers dans l\'ordre — sans se perdre.',
-      sections:    ['Films', 'Séries', 'Jeux', 'Chronologie', 'Parcours', 'Databank'],
-      wip:         'En construction',
-      footer:      'Site non-officiel · Aucune affiliation avec Lucasfilm ou Disney',
-    },
-    en: {
-      tagline:     'A Star Wars fan guide<br>made by a fan, not an algorithm.',
-      desc:        'Films, series, video games, galactic eras.<br>Curated paths to explore the universe — without spoilers.',
-      sections:    ['Films', 'Series', 'Games', 'Timeline', 'Paths', 'Databank'],
-      wip:         'Work in progress',
-      footer:      'Unofficial fan site · No affiliation with Lucasfilm or Disney',
-    },
-  }
+      clearTimeout(langTimeout)
 
-  function setLang(lang) {
-    const s = strings[lang]
-    document.getElementById('tagline').innerHTML    = s.tagline
-    document.getElementById('desc').innerHTML       = s.desc
-    document.getElementById('wip-label').textContent = s.wip
-    document.getElementById('footer-note').textContent = s.footer
+      if (!animated) {
+        applyLang(lang)
+        return
+      }
 
-    const items = document.querySelectorAll('#sections .section-item')
-    s.sections.forEach((label, i) => { if (items[i]) items[i].textContent = label })
+      document.body.classList.add('lang-switching')
+
+      langTimeout = setTimeout(() => {
+        applyLang(lang)
+
+        requestAnimationFrame(() => {
+          document.body.classList.remove('lang-switching')
+        })
+      }, 220)
+    }
 
     document.querySelectorAll('.lang-btn').forEach(btn => {
-      btn.classList.toggle('active', btn.dataset.lang === lang)
+      btn.addEventListener('click', () => {
+        setLang(btn.dataset.lang)
+      })
     })
 
-    document.documentElement.lang = lang
-  }
-</script>
+    setLang('fr', false)
+  </script>
 </body>
+
 </html>
